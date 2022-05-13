@@ -39,19 +39,20 @@ def get_tile(mouse_pos):
 
 
 # CONSTANTS
-WIDTH = 600
-HEIGHT = 600
+WIDTH = 800
+HEIGHT = 800
 BACKGROUND = (0, 0, 0)
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 SCREEN.fill(BACKGROUND)
 update()
 
 # Stuff
-board = Board(3, 3, ["x", "o"])
+board = Board(8, 3, ["x", "o"])
 tile_size = WIDTH/len(board.board)
 
 # Loop
 running = True
+reset_board = False
 
 print("Start")
 while running:
@@ -64,11 +65,19 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif pygame.mouse.get_pressed()[0]:
-            tile = get_tile(pygame.mouse.get_pos())
-            if board.attempt_move(tile[0], tile[1]):
-                won, winner = board.check_win()
-                if won:
-                    print(winner + " won")
+            if reset_board:
+                board.reset()
+                reset_board = False
+            else:
+                tile = get_tile(pygame.mouse.get_pos())
+                if board.attempt_move(tile[0], tile[1]):
+                    won, winner = board.check_win()
+                    if won == 1:
+                        print(winner + " won")
+                        reset_board = True
+                    elif won == 2:
+                        print("draw")
+                        reset_board = True
 
     update()
 
