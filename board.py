@@ -1,3 +1,4 @@
+from typing import Tuple
 import pygame
 
 
@@ -35,25 +36,35 @@ class Board:
         self.turn = (self.turn + 1) % len(self.players)
         return True
 
-    def check_win(self) -> bool:
+    def check_win(self) -> Tuple[bool, str]:
 
         # Check horizontal
         for x in range(self.board_size):
             for y in range(self.board_size):
                 base_plr = self.board[x][y]
+                if base_plr == "":
+                    continue
                 win_h = True
                 win_v = True
                 win_d = True
+
                 for w in range(self.win_num):
-                    if x + w < self.board_size:
-                        if self.board[x + w][y] != base_plr:
-                            win_h = False
-                    if y + w < self.board_size:
-                        if self.board[x][y + w] != base_plr:
-                            win_v = False
-                    if x + w < self.board_size and y + w < self.board_size:
-                        if self.board[x][y + w] != base_plr:
-                            win_d = False
+                    if x + self.win_num > self.board_size:
+                        win_h = False
+                    elif self.board[x + w][y] != base_plr:
+                        win_h = False
+
+                    if y + self.win_num > self.board_size:
+                        win_v = False
+                    elif self.board[x][y + w] != base_plr:
+                        win_v = False
+
+                    if y + self.win_num > self.board_size or x + self.win_num > self.board_size:
+                        win_d = False
+                    elif self.board[x + w][y + w] != base_plr:
+                        win_d = False
+
                 if win_h or win_v or win_d:
-                    return True
-        return False
+                    print(win_h, win_v, win_d)
+                    return True, base_plr
+        return False, ""
