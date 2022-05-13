@@ -27,10 +27,14 @@ def draw_board(board):
         for y in range(len(board)):
             x_pos = x * tile_size
             y_pos = y * tile_size
-            pygame.draw.rect(SCREEN, (200, 200, 200),
+            c = 200 + 5 * ((x+y) % 2)
+            col = (c, c, c)
+            if board[x][y] is not "":
+                col = COLORS[board[x][y].lower()]
+            pygame.draw.rect(SCREEN, col,
                              (x_pos, y_pos, tile_size, tile_size))
-            draw_text(board[x][y], (0, 0, 0),
-                      (x_pos + tile_size / 2, y_pos + tile_size / 2))
+            # draw_text(board[x][y], (0, 0, 0),
+            #           (x_pos + tile_size / 2, y_pos + tile_size / 2))
 
 
 def get_tile(mouse_pos):
@@ -42,12 +46,41 @@ def get_tile(mouse_pos):
 WIDTH = 800
 HEIGHT = 800
 BACKGROUND = (0, 0, 0)
+COLORS = {
+    "a": (0, 0, 0),
+    "b": (50, 0, 0),
+    "c": (100, 0, 0),
+    "d": (150, 0, 0),
+    "e": (200, 0, 0),
+    "f": (250, 0, 0),
+    "g": (0, 50, 0),
+    "h": (0, 100, 0),
+    "i": (0, 150, 0),
+    "j": (0, 200, 0),
+    "k": (0, 250, 0),
+    "l": (0, 0, 50),
+    "m": (0, 0, 100),
+    "n": (0, 0, 150),
+    "o": (0, 0, 200),
+    "p": (0, 0, 250),
+    "q": (50, 50, 0),
+    "r": (0, 50, 50),
+    "s": (100, 100, 0),
+    "t": (0, 100, 100),
+    "u": (150, 150, 0),
+    "v": (0, 150, 150),
+    "w": (50, 0, 50),
+    "x": (100, 0, 100),
+    "y": (150, 0, 150),
+    "z": (200, 0, 200),
+
+}
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 SCREEN.fill(BACKGROUND)
 update()
 
 # Stuff
-board = Board(8, 3, ["x", "o"])
+board = Board(8, 3, ["a", "i", "z"])
 tile_size = WIDTH/len(board.board)
 
 # Loop
