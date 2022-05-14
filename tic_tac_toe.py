@@ -1,5 +1,6 @@
 import pygame
 from board import Board
+from time import sleep as wait
 
 pygame.init()
 
@@ -13,9 +14,9 @@ def draw_text(t, color, pos, font_size=150):
     global COLORS
     my_font = pygame.font.Font(None, font_size)
     text = str(t)
-    if text not in COLORS:
-        return
-    render_font = my_font.render(text, 1, COLORS[text])
+    if text.lower() in COLORS:
+        color = COLORS[text.lower()]
+    render_font = my_font.render(text, 1, color)
     text_rect = render_font.get_rect(center=pos)
     SCREEN.blit(render_font, text_rect)
 
@@ -83,7 +84,7 @@ SCREEN.fill(BACKGROUND)
 update()
 
 # Stuff
-board = Board(8, 3, ["a", "i", "z"])
+board = Board(8, 3, ["X", "O", "A"])
 tile_size = WIDTH/len(board.board)
 
 # Loop
@@ -111,7 +112,10 @@ while running:
                     won, winner = board.check_win()
                     if won == 1:
                         print(winner + " won")
+                        draw_text(winner + " WINS", (0, 0, 0), (WIDTH/2, HEIGHT/2))
+                        update()
                         reset_board = True
+                        wait(1)
                     elif won == 2:
                         print("draw")
                         reset_board = True
