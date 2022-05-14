@@ -9,14 +9,17 @@ def update():
     pygame.display.flip()
 
 
-def draw_text(t, color, pos, font_size=150):
+def draw_text(t, color, pos, font_size=150, white_back=False):
     global SCREEN
     global COLORS
     my_font = pygame.font.Font(None, font_size)
     text = str(t)
     if text.lower() in COLORS:
         color = COLORS[text.lower()]
-    render_font = my_font.render(text, 1, color)
+    if white_back:
+        render_font = my_font.render(text, 1, color, (255, 255, 255))
+    else:
+        render_font = my_font.render(text, 1, color)
     text_rect = render_font.get_rect(center=pos)
     SCREEN.blit(render_font, text_rect)
 
@@ -45,10 +48,15 @@ def get_tile(mouse_pos):
     global tile_size
     return (int(mouse_pos[0] // tile_size), int(mouse_pos[1] // tile_size))
 
-
+def render_board():
+    global SCREEN
+    global board
+    SCREEN.fill(BACKGROUND)
+    draw_board(board.board)
+    draw_text(board.players[board.turn], (0,0,0), (10, 10), font_size=25)
 # CONSTANTS
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 600
+HEIGHT = 600
 BACKGROUND = (0, 0, 0)
 COLORS = {
     "a": (0, 0, 0),
@@ -84,25 +92,28 @@ SCREEN.fill(BACKGROUND)
 update()
 
 # Stuff
-board = Board(8, 3, ["X", "O", "A"])
+board = Board(3, 3, ["X", "O", "A"])
 tile_size = WIDTH/len(board.board)
 
 # Loop
 running = True
 reset_board = False
 
+can_click = True
+# render = True
+
 print("Start")
 while running:
     # Clear screen
-    SCREEN.fill(BACKGROUND)
-    draw_board(board.board)
-    draw_text(board.players[board.turn], (0,0,0), (10, 10), font_size=25)
+    if not reset_board:
+        render_board()
 
     # Get events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif pygame.mouse.get_pressed()[0]:
+        elif pygame.mouse.get_pressed()[0] and can_click:
+            can_click = False
             if reset_board:
                 board.reset()
                 reset_board = False
@@ -112,15 +123,22 @@ while running:
                     won, winner = board.check_win()
                     if won == 1:
                         print(winner + " won")
-                        draw_text(winner + " WINS", (0, 0, 0), (WIDTH/2, HEIGHT/2))
+                        render_board()
+                        draw_text(winner + " WINS", (0, 0, 0), (WIDTH/2, HEIGHT/2), white_back=True)
                         update()
                         reset_board = True
-                        wait(1)
+                        #wait(1)
                     elif won == 2:
                         print("draw")
+                        render_board()
+                        draw_text("Draw", (0, 0, 0), (WIDTH/2, HEIGHT/2), white_back=True)
+                        update()
                         reset_board = True
+        elif not pygame.mouse.get_pressed()[0]:
+            can_click = True
 
-    update()
+    if not reset_board:
+        update()
 
 
 # Quit
