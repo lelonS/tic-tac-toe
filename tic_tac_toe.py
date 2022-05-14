@@ -92,7 +92,7 @@ SCREEN.fill(BACKGROUND)
 update()
 
 # Stuff
-board = Board(3, 3, ["X", "O", "A"])
+board = Board(5, 3, ["X", "O", "A"])
 tile_size = WIDTH/len(board.board)
 
 # Loop
