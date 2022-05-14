@@ -8,12 +8,14 @@ def update():
     pygame.display.flip()
 
 
-def draw_text(t, color, pos):
+def draw_text(t, color, pos, font_size=150):
     global SCREEN
-    font_size = 150
+    global COLORS
     my_font = pygame.font.Font(None, font_size)
     text = str(t)
-    render_font = my_font.render(text, 1, color)
+    if text not in COLORS:
+        return
+    render_font = my_font.render(text, 1, COLORS[text])
     text_rect = render_font.get_rect(center=pos)
     SCREEN.blit(render_font, text_rect)
 
@@ -28,12 +30,14 @@ def draw_board(board):
             y_pos = y * tile_size
             c = 200 + 5 * ((x+y) % 2)
             col = (c, c, c)
-            if board[x][y] is not "":
-                col = COLORS[board[x][y].lower()]
+            # if board[x][y] is not "":
+            #     col = COLORS[board[x][y].lower()]
             pygame.draw.rect(SCREEN, col,
                              (x_pos, y_pos, tile_size, tile_size))
-            # draw_text(board[x][y], (0, 0, 0),
-            #           (x_pos + tile_size / 2, y_pos + tile_size / 2))
+            draw_text(board[x][y], (0, 0, 0),
+                      (x_pos + tile_size / 2, y_pos + tile_size / 2))
+    
+   
 
 
 def get_tile(mouse_pos):
@@ -91,6 +95,7 @@ while running:
     # Clear screen
     SCREEN.fill(BACKGROUND)
     draw_board(board.board)
+    draw_text(board.players[board.turn], (0,0,0), (10, 10), font_size=25)
 
     # Get events
     for event in pygame.event.get():
