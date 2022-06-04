@@ -1,4 +1,3 @@
-from numpy import tile
 import pygame
 from board import Board
 
