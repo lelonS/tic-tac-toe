@@ -39,21 +39,22 @@ def draw_board(board):
             pygame.draw.rect(SCREEN, col,
                              (x_pos, y_pos, tile_size, tile_size))
             draw_text(board[x][y], (0, 0, 0),
-                      (x_pos + tile_size / 2, y_pos + tile_size / 2))
-    
-   
+                      (x_pos + tile_size / 2, y_pos + tile_size / 2), int(tile_size))
 
 
 def get_tile(mouse_pos):
     global tile_size
     return (int(mouse_pos[0] // tile_size), int(mouse_pos[1] // tile_size))
 
+
 def render_board():
     global SCREEN
     global board
     SCREEN.fill(BACKGROUND)
     draw_board(board.board)
-    draw_text(board.players[board.turn], (0,0,0), (10, 10), font_size=25)
+    draw_text(board.players[board.turn], (0, 0, 0), (10, 10), font_size=25)
+
+
 # CONSTANTS
 WIDTH = 600
 HEIGHT = 600
@@ -92,7 +93,7 @@ SCREEN.fill(BACKGROUND)
 update()
 
 # Stuff
-board = Board(5, 3, ["X", "O", "A"])
+board = Board(8, 4, ["X", "O"])
 tile_size = WIDTH/len(board.board)
 
 # Loop
@@ -124,14 +125,16 @@ while running:
                     if won == 1:
                         print(winner + " won")
                         render_board()
-                        draw_text(winner + " WINS", (0, 0, 0), (WIDTH/2, HEIGHT/2), white_back=True)
+                        draw_text(winner + " WINS", (0, 0, 0),
+                                  (WIDTH/2, HEIGHT/2), white_back=True)
                         update()
                         reset_board = True
-                        #wait(1)
+                        # wait(1)
                     elif won == 2:
                         print("draw")
                         render_board()
-                        draw_text("Draw", (0, 0, 0), (WIDTH/2, HEIGHT/2), white_back=True)
+                        draw_text("Draw", (0, 0, 0),
+                                  (WIDTH/2, HEIGHT/2), white_back=True)
                         update()
                         reset_board = True
         elif not pygame.mouse.get_pressed()[0]:
